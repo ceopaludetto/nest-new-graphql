@@ -1,5 +1,5 @@
 import { Module, Global } from "@nestjs/common";
-import { PinoLogger } from "nestjs-pino";
+// import { PinoLogger } from "nestjs-pino";
 import { resolve } from "path";
 
 import { ConfigurationService } from "./configuration.service";
@@ -9,15 +9,15 @@ import { ConfigurationService } from "./configuration.service";
   providers: [
     {
       provide: ConfigurationService,
-      inject: [PinoLogger],
-      useFactory: (logger: PinoLogger) =>
+      // inject: [PinoLogger],
+      useFactory: () =>
         new ConfigurationService(
           resolve(
             process.env.BASE_DIR as string,
             "env",
             `config.${(process.env.DEPLOYMENT as string) || "development"}.yml`
-          ),
-          logger
+          )
+          // logger
         ),
     },
   ],

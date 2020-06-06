@@ -1,25 +1,24 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { PrimaryKey, CreatedAt, UpdatedAt, DeletedAt, Column, Model, Default } from "sequelize-typescript";
-import { generate } from "shortid";
+// import { PrimaryKey, CreatedAt, UpdatedAt, DeletedAt, Column, Model, Default } from "sequelize-typescript";
+// import { generate } from "shortid";
 
 @ObjectType()
-export abstract class BaseModel<T> extends Model<T> {
-  @Default(generate)
-  @PrimaryKey
-  @Column
+export abstract class BaseModel {
+  // @Default(generate)
+  // @PrimaryKey
+  // @Column
   @Field(() => ID)
   public id!: string;
 
-  @Field()
-  @CreatedAt
+  // @CreatedAt
   @Field()
   public createdAt!: Date;
 
-  @UpdatedAt
+  // @UpdatedAt
   @Field()
   public updatedAt!: Date;
 
-  @DeletedAt
+  // @DeletedAt
   @Field()
   public deletedAt!: Date;
 }

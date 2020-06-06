@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import fs from "fs";
 import { GraphQLSchema } from "graphql";
-import { PinoLogger } from "nestjs-pino";
+// import { PinoLogger } from "nestjs-pino";
 import { Dialect } from "sequelize";
 import yaml from "yaml";
 import * as Yup from "yup";
@@ -52,7 +52,7 @@ export class ConfigurationService {
 
   private graphqlSchema!: GraphQLSchema;
 
-  public constructor(filePath: string, private readonly logger: PinoLogger) {
+  public constructor(filePath: string) {
     const config = yaml.parse(fs.readFileSync(filePath, "UTF-8"));
     const validated = this.validateInput(config);
     if (validated !== false) {
@@ -66,9 +66,9 @@ export class ConfigurationService {
 
       return config as EnvConfig;
     } catch (error) {
-      if (error instanceof Yup.ValidationError) {
-        this.logger.error(error.message);
-      }
+      // if (error instanceof Yup.ValidationError) {
+      //   this.logger.error(error.message);
+      // }
 
       return false;
     }
