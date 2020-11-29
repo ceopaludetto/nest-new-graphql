@@ -26,7 +26,7 @@ export default function Locals() {
           </Box>
         </Box>
       }
-      helmet={{ title: "Locais" }}
+      helmetProps={{ title: "Locais" }}
       maxWidth="xl"
     >
       teste

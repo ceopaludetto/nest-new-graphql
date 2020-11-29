@@ -3,9 +3,8 @@ import { Helmet } from "react-helmet-async";
 import { useForm, FormProvider } from "react-hook-form";
 import { FiX } from "react-icons/fi";
 
-import { yupResolver } from "@hookform/resolvers";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Grid, Button, Divider, Box, Typography, Snackbar, IconButton } from "@material-ui/core";
-import type { UserInputError } from "apollo-server-express";
 
 import { FormControl, FormToggle, FormCalendar, MaskedFormControl, PasswordHelper } from "@/client/components";
 import { useMeQuery, MeQuery, useUpdateUserMutation, useChangePasswordMutation, MeDocument } from "@/client/graphql";
@@ -16,19 +15,21 @@ import {
   SettingsPersonalSchema,
   SettingsPersonalValues,
 } from "@/client/helpers/validations/settings.schema";
-import { useMultipleVisibility, usePasswordHelp } from "@/client/hooks";
+import { useMultipleVisibility, usePasswordHelp, useErrorHandler } from "@/client/hooks";
 import type { Client } from "@/client/utils/common.dto";
-import { splitPhone } from "@/client/utils/string";
+import { splitPhone, mergePhone } from "@/client/utils/string";
 
 export default function Personal() {
-  const [passwordGenericError, setPasswordGenericError] = React.useState(false);
-  const [personalGenericError, setPersonalGenericError] = React.useState(false);
-  const [snackbarContent, setSnackbarContent] = React.useState("");
-  const [snackbarOpen, setSnackbarOpen] = React.useState(false);
+  const { handleError: handlePersonalError, defaultError: personalError } = useErrorHandler();
+  const { handleError: handlePasswordError, defaultError: passwordError } = useErrorHandler();
+  const [snackbar, setSnackbar] = React.useState({
+    content: "",
+    isOpen: false,
+  });
   const [mapPropsToField] = useMultipleVisibility(["currentPassword", "newPassword", "repeatNewPassword"]);
-  const { data } = useMeQuery();
   const [changePassword] = useChangePasswordMutation();
   const [changeUserData] = useUpdateUserMutation();
+  const { data } = useMeQuery();
 
   const personal = useForm<SettingsPersonalValues>({
     resolver: yupResolver(SettingsPersonalSchema),
@@ -38,7 +39,7 @@ export default function Personal() {
       cpf: data?.profile.person.cpf,
       login: data?.profile.login,
       email: data?.profile.person.email,
-      phone: `${data?.profile.person.phones[0].ddd}${data?.profile.person.phones[0].number}`,
+      phone: Masks.tel.format(mergePhone(data?.profile.person.phones[0])),
       birthdate: data?.profile.person.birthdate,
       publicAccount: false,
     },
@@ -56,9 +57,8 @@ export default function Personal() {
   const newPasswordValue = password.watch("newPassword");
   const passwordHelp = usePasswordHelp(newPasswordValue);
 
-  const handlePersonalSubmit = personal.handleSubmit(async ({ login, birthdate, phone, publicAccount, ...rest }) => {
-    setPersonalGenericError(false);
-    try {
+  const handlePersonalSubmit = personal.handleSubmit(
+    handlePersonalError<SettingsPersonalValues>(async ({ login, birthdate, phone, publicAccount, ...rest }) => {
       await changeUserData({
         variables: {
           input: {
@@ -72,27 +72,14 @@ export default function Personal() {
         },
       });
 
-      setSnackbarContent("Informações pessoais alteradas com sucesso!");
-      setSnackbarOpen(true);
+      setSnackbar({ content: "Informações pessoais alteradas com sucesso!", isOpen: true });
 
       personal.reset(personal.getValues());
-    } catch (error) {
-      const graphQLError = (error?.graphQLErrors as UserInputError[])[0];
-      if (graphQLError?.extensions?.fields) {
-        const field: "currentPassword" = graphQLError.extensions.fields[0];
-        personal.setError(field, {
-          type: "graphql",
-          message: graphQLError.message,
-        });
-      } else {
-        setPersonalGenericError(true);
-      }
-    }
-  });
+    }, personal.setError)
+  );
 
-  const handlePasswordSubmit = password.handleSubmit(async ({ currentPassword, newPassword }) => {
-    setPasswordGenericError(false);
-    try {
+  const handlePasswordSubmit = password.handleSubmit(
+    handlePasswordError<SettingsPasswordValues>(async ({ currentPassword, newPassword }) => {
       await changePassword({
         variables: {
           input: {
@@ -102,33 +89,21 @@ export default function Personal() {
         },
       });
 
-      setSnackbarContent("Senha alterada com sucesso!");
-      setSnackbarOpen(true);
+      setSnackbar({ content: "Senha alterada com sucesso!", isOpen: true });
 
       password.reset();
-    } catch (error) {
-      const graphQLError = (error.graphQLErrors as UserInputError[])[0];
-      if (graphQLError.extensions.fields) {
-        const field: "currentPassword" = graphQLError.extensions.fields[0];
-        password.setError(field, {
-          type: "graphql",
-          message: graphQLError.message,
-        });
-      } else {
-        setPasswordGenericError(true);
-      }
-    }
-  });
+    }, password.setError)
+  );
 
-  function handleClose() {
-    setSnackbarOpen(false);
-  }
+  const handleClose = React.useCallback(() => {
+    setSnackbar((current) => ({ ...current, isOpen: false }));
+  }, []);
 
   return (
     <>
       <Snackbar
-        message={snackbarContent}
-        open={snackbarOpen}
+        message={snackbar.content}
+        open={snackbar.isOpen}
         onClose={handleClose}
         anchorOrigin={{
           vertical: "bottom",
@@ -143,8 +118,8 @@ export default function Personal() {
       />
       <Helmet title="Configurações - Informações Pessoais" />
       <FormProvider {...personal}>
-        <form onSubmit={handlePersonalSubmit}>
-          {personalGenericError && (
+        <form noValidate onSubmit={handlePersonalSubmit}>
+          {personalError && (
             <Typography variant="body2" color="error">
               Falha ao alterar dados de usuário
             </Typography>
@@ -196,12 +171,12 @@ export default function Personal() {
           </Grid>
         </form>
       </FormProvider>
-      <Box my={2}>
+      <Box my={3}>
         <Divider />
       </Box>
       <FormProvider {...password}>
-        <form onSubmit={handlePasswordSubmit}>
-          {passwordGenericError && (
+        <form noValidate onSubmit={handlePasswordSubmit}>
+          {passwordError && (
             <Typography variant="body2" color="error">
               Falha ao alterar senha
             </Typography>
@@ -271,11 +246,11 @@ export default function Personal() {
           </Grid>
         </form>
       </FormProvider>
-      <Box my={2}>
+      <Box my={3}>
         <Divider />
       </Box>
-      <Box textAlign="center" pt={1} pb={3}>
-        <Button variant="text" color="secondary">
+      <Box textAlign="center" color="error.main" pb={3}>
+        <Button variant="text" color="inherit">
           Excluir Conta
         </Button>
       </Box>

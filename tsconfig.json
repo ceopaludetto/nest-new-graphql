@@ -22,17 +22,6 @@
     "skipLibCheck": true,
     "importsNotUsedAsValues": "error"
   },
-  "include": [
-    "src/**/*",
-    "configuration/**/*",
-    "scripts/**/*",
-    "database.config.js",
-    "razzle.config.js",
-    ".eslintrc.js",
-    "jest.config.js",
-    "babel.config.js",
-    "__mocks__/**/*",
-    "mikro-orm.config.js"
-  ],
+  "include": ["src/**/*", "configuration/**/*", "scripts/**/*", "**/*.js"],
   "exclude": ["node_modules", "dist", "build", "coverage", "certs", "env"]
 }

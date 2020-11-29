@@ -1,45 +1,42 @@
 import * as React from "react";
+import { useWindowScroll } from "react-use";
 
 import { Button, Box, Container } from "@material-ui/core";
 
+import { Logo } from "@/client/assets/logo";
 import { useLoggedQuery } from "@/client/graphql";
 
-import { Blurred } from "../../layout";
+import { Blurred, Spacer } from "../../layout";
 import { PreloadLink } from "../../typography/preload-link";
 
 export function Header() {
   const { data } = useLoggedQuery();
+  const { y } = useWindowScroll();
 
   return (
     <Box position="fixed" width="100%">
-      <Blurred border>
+      <Blurred border={y !== 0}>
         <Container>
           <Box display="flex" alignItems="center" py={2}>
             <Box flex="1">
-              <svg width="40" viewBox="0 0 116 100" fill="#fff" xmlns="http://www.w3.org/2000/svg">
-                <path fillRule="evenodd" clipRule="evenodd" d="M57.5 0L115 100H0L57.5 0z" />
-              </svg>
+              <PreloadLink to="/">
+                <Logo height={35} />
+              </PreloadLink>
             </Box>
             <Box>
               {data?.logged ? (
-                <Button component={PreloadLink} color="primary" variant="text" size="small" to="/app/:condominium">
+                <Button component={PreloadLink} color="primary" variant="text" to="/app/:condominium">
                   Abrir
                 </Button>
               ) : (
-                <>
-                  <Button component={PreloadLink} color="primary" variant="text" size="small" to="/auth/signin">
+                <Spacer>
+                  <Button component={PreloadLink} color="primary" variant="text" to="/auth/signin">
                     Entrar
-                  </Button>{" "}
-                  <Button
-                    component={PreloadLink}
-                    color="primary"
-                    variant="contained"
-                    size="small"
-                    to="/auth/signup/step-1"
-                  >
+                  </Button>
+                  <Button component={PreloadLink} color="primary" variant="contained" to="/auth/signup/step-1">
                     Cadastre-se
                   </Button>
-                </>
+                </Spacer>
               )}
             </Box>
           </Box>

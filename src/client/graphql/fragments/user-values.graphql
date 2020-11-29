@@ -1,13 +1,9 @@
 #import "./person-values.graphql"
-#import "./settings-values.graphql"
 
 fragment UserValues on User {
   id
   login
   person {
     ...PersonValues
-  }
-  settings {
-    ...SettingsValues
   }
 }

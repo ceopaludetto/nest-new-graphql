@@ -47,7 +47,7 @@ export function AppHeader({ routes }: Pick<RouteComponentProps, "routes">) {
   const [isOpen, setIsOpen] = React.useState(false);
   const [evict] = useEvictRefreshCookieMutation();
   const name = React.useMemo(() => data?.profile.person.name.substring(0, 2), [data]);
-  const theme: Theme = useTheme();
+  const theme = useTheme<Theme>();
   const classes = useStyles();
 
   const handleLogout = React.useCallback(async () => {

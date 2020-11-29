@@ -1,9 +1,24 @@
 import * as React from "react";
 import { AiOutlineTwitter, AiOutlineGithub } from "react-icons/ai";
+import { FiSun, FiMoon } from "react-icons/fi";
 
-import { Typography, Paper, Link, Container, IconButton, Box, Grid } from "@material-ui/core";
+import {
+  Typography,
+  Paper,
+  Link,
+  Container,
+  IconButton,
+  Box,
+  Grid,
+  Select,
+  MenuItem,
+  InputAdornment,
+} from "@material-ui/core";
 
-import { PreloadLink } from "@/client/components/typography";
+import { Logo } from "@/client/assets/logo";
+import { Spacer } from "@/client/components/layout";
+import { PreloadLink, Tooltip } from "@/client/components/typography";
+import { useColorMode } from "@/client/hooks";
 import { routes } from "@/client/providers/routes";
 import type { Route } from "@/client/utils/common.dto";
 import { retrieveTo } from "@/client/utils/string";
@@ -13,6 +28,7 @@ export function Footer() {
   const { current: company } = React.useRef(current?.children?.filter((r: Route) => r.meta?.type === "company"));
   const { current: resource } = React.useRef(current?.children?.filter((r: Route) => r.meta?.type === "resource"));
   const { current: legal } = React.useRef(current?.children?.filter((r: Route) => r.meta?.type === "legal"));
+  const { colorMode, changeColorMode } = useColorMode();
 
   return (
     <footer>
@@ -64,27 +80,50 @@ export function Footer() {
                   ))}
                 </Grid>
               </Grid>
-              <Box mt={4} textAlign={{ xs: "center", md: "left" }}>
-                <svg width="40" viewBox="0 0 116 100" fill="#fff" xmlns="http://www.w3.org/2000/svg">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M57.5 0L115 100H0L57.5 0z" />
-                </svg>
-              </Box>
               <Box
+                mt={4}
                 display="flex"
                 flexWrap="wrap"
-                alignItems="center"
+                alignItems="flex-end"
                 justifyContent={{ xs: "center", md: "flex-start" }}
               >
-                <Box flex={{ xs: "0 0 100%", md: "1" }} mt={1} mb={3} textAlign={{ xs: "center", md: "left" }}>
+                <Box
+                  mt={1}
+                  mb={{ xs: 3, md: 0 }}
+                  flex={{ xs: "0 0 100%", md: "1" }}
+                  textAlign={{ xs: "center", md: "left" }}
+                >
+                  <PreloadLink to="/">
+                    <Logo isLogoType height={40} />
+                  </PreloadLink>
                   <Typography variant="body2">Copyright © 2020 Domus Inc. Todos direitos reservados.</Typography>
                 </Box>
                 <Box>
-                  <IconButton color="primary">
-                    <AiOutlineGithub />
-                  </IconButton>{" "}
-                  <IconButton color="primary">
-                    <AiOutlineTwitter />
-                  </IconButton>
+                  <Spacer display="flex" alignItems="center">
+                    <Tooltip title="Github">
+                      <IconButton color="primary" aria-label="Github">
+                        <AiOutlineGithub />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Twitter">
+                      <IconButton color="primary" aria-label="Github">
+                        <AiOutlineTwitter />
+                      </IconButton>
+                    </Tooltip>
+                    <Select
+                      margin="dense"
+                      value={colorMode}
+                      startAdornment={
+                        <InputAdornment position="start">
+                          {colorMode === "dark" ? <FiMoon /> : <FiSun />}
+                        </InputAdornment>
+                      }
+                      onChange={(e) => changeColorMode(e.target.value as "dark" | "light")}
+                    >
+                      <MenuItem value="dark">Escuro</MenuItem>
+                      <MenuItem value="light">Claro</MenuItem>
+                    </Select>
+                  </Spacer>
                 </Box>
               </Box>
             </Container>

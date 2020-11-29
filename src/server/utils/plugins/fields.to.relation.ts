@@ -1,4 +1,3 @@
-import type { GraphQLResolveInfo } from "graphql";
 import graphqFields from "graphql-fields";
 
 interface GraphQLFieldsToRelationsOptions {
@@ -8,7 +7,7 @@ interface GraphQLFieldsToRelationsOptions {
 }
 
 export function GraphQLFieldsToRelations(
-  info: GraphQLResolveInfo,
+  info: Parameters<typeof graphqFields>[0],
   options: GraphQLFieldsToRelationsOptions = { depth: undefined, root: "", exclude: [] }
 ): string[] {
   const paths: string[][] = [];

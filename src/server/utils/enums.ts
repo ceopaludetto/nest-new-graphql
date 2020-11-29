@@ -7,11 +7,6 @@ export enum Order {
   DESC_NULLS_FIRST = "DESC NULLS FIRST",
 }
 
-export enum Theme {
-  DARK = "Dark",
-  LIGHT = "Light",
-}
-
 export enum Gender {
   M = "Male",
   F = "Female",

@@ -1,10 +1,10 @@
 import * as React from "react";
 import { useForm, FormProvider } from "react-hook-form";
 
-import { yupResolver } from "@hookform/resolvers";
-import { Button, Box, MenuItem, Grid } from "@material-ui/core";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { Button, Box, MenuItem, Grid, FormControlLabel, Radio } from "@material-ui/core";
 
-import { MaskedFormControl, FormControl, FormSelect, FormToggle, FormRadioCard, RadioCard } from "@/client/components";
+import { MaskedFormControl, FormControl, FormSelect, FormToggle, FormRadioGroup, Spacer } from "@/client/components";
 import {
   useShowStatesQuery,
   useRegisterMutation,
@@ -14,11 +14,10 @@ import {
   LoggedQuery,
   SelectedCondominiumDocument,
   SelectedCondominiumQuery,
-  Theme,
 } from "@/client/graphql";
 import * as Masks from "@/client/helpers/masks";
 import { SignUpStep3Schema, SignUpStep3Values } from "@/client/helpers/validations/signup.schema";
-import { StepperContext } from "@/client/hooks";
+import { useStepperContext, useErrorHandlerContext } from "@/client/hooks";
 import { clean } from "@/client/utils/clean";
 import type { Client } from "@/client/utils/common.dto";
 import { splitPhone } from "@/client/utils/string";
@@ -27,7 +26,8 @@ import { WizardContext, initialValues } from "../providers";
 
 export default function Step3() {
   const { setValues, values } = React.useContext(WizardContext);
-  const { prev } = React.useContext(StepperContext);
+  const { handleError } = useErrorHandlerContext();
+  const { prev } = useStepperContext();
   const methods = useForm<SignUpStep3Values>({
     resolver: yupResolver(SignUpStep3Schema),
     defaultValues: values,
@@ -37,8 +37,8 @@ export default function Step3() {
   const [register, { client }] = useRegisterMutation();
   const { data } = useShowStatesQuery();
 
-  const submit = methods.handleSubmit(async (datas) => {
-    try {
+  const submit = methods.handleSubmit(
+    handleError<SignUpStep3Values>(async (datas) => {
       if (values) {
         setValues({ ...values, ...clean(datas) });
         const {
@@ -64,9 +64,6 @@ export default function Step3() {
                   birthdate: birthdate as Date,
                   phones: phone ? [splitPhone(phone)] : [],
                   condominiums: [{ ...condominium, address }],
-                },
-                settings: {
-                  theme: Theme.Dark,
                 },
               },
             },
@@ -95,26 +92,18 @@ export default function Step3() {
           }
         }
       }
-    } catch (error) {
-      console.error(error);
-    }
-  });
+    }, methods.setError)
+  );
 
   return (
     <FormProvider {...methods}>
       <form noValidate onSubmit={submit}>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <FormRadioCard name="type">
-              <Grid container spacing={3}>
-                <Grid item xs={12} md={6}>
-                  <RadioCard autoFocus name="type" value="enter" label="Ingressar condomínio" />
-                </Grid>
-                <Grid item xs={12} md={6}>
-                  <RadioCard name="type" value="create" label="Criar novo condomínio" />
-                </Grid>
-              </Grid>
-            </FormRadioCard>
+            <FormRadioGroup name="type" row>
+              <FormControlLabel control={<Radio autoFocus />} name="type" value="enter" label="Ingressar condomínio" />
+              <FormControlLabel control={<Radio />} name="type" value="create" label="Criar novo condomínio" />
+            </FormRadioGroup>
           </Grid>
         </Grid>
         {type === "create" && (
@@ -163,29 +152,31 @@ export default function Step3() {
                   </FormSelect>
                 </Grid>
               )}
-              <Grid item xs={12}>
-                <FormToggle
-                  label="Termos de uso"
-                  info="Ao assinar essa opção você concorda com nossos termos de uso."
-                  id="terms"
-                  name="terms"
-                  color="secondary"
-                  variant="checkbox"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Box textAlign="right">
-                  <Button variant="text" color="primary" onClick={prev}>
-                    Voltar
-                  </Button>{" "}
-                  <Button variant="contained" color="primary" type="submit">
-                    Cadastrar
-                  </Button>
-                </Box>
-              </Grid>
             </Grid>
           </Box>
         )}
+        <Grid container spacing={3}>
+          <Grid item xs={12}>
+            <FormToggle
+              label="Termos de uso"
+              info="Ao assinar essa opção você concorda com nossos termos de uso."
+              id="terms"
+              name="terms"
+              color="secondary"
+              variant="checkbox"
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Spacer textAlign="right">
+              <Button variant="text" color="primary" onClick={prev}>
+                Voltar
+              </Button>
+              <Button variant="contained" color="primary" type="submit">
+                Cadastrar
+              </Button>
+            </Spacer>
+          </Grid>
+        </Grid>
       </form>
     </FormProvider>
   );

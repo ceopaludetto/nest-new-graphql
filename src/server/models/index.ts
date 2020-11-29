@@ -7,5 +7,4 @@ export { Phone } from "./phone.model";
 export { State } from "./state.model";
 export { User } from "./user.model";
 export { Address } from "./address.model";
-export { Settings } from "./settings.model";
 export { BaseModel } from "./base.model";

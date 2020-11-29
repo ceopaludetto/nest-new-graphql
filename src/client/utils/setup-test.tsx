@@ -3,23 +3,20 @@ import "@testing-library/jest-dom/extend-expect";
 import { HelmetProvider } from "react-helmet-async";
 import { MemoryRouter } from "react-router-dom";
 
-import { ThemeProvider } from "@material-ui/styles";
 import { render } from "@testing-library/react";
 
-import { createTheme } from "@/client/providers/theme";
+import { ThemeProvider } from "@/client/providers/theme";
 
 interface AllProvidersProps {
   children?: React.ReactNode;
 }
-
-const theme = createTheme();
 
 const AllProviders: React.FunctionComponent<AllProvidersProps> = ({ children }) => {
   return (
     <React.StrictMode>
       <HelmetProvider>
         <MemoryRouter>
-          <ThemeProvider theme={theme}>{children}</ThemeProvider>
+          <ThemeProvider cookies="">{children}</ThemeProvider>
         </MemoryRouter>
       </HelmetProvider>
     </React.StrictMode>

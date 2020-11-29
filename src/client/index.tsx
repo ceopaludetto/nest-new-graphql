@@ -28,7 +28,7 @@ loadableReady().then(() => {
     <HelmetProvider>
       <ApolloProvider client={client}>
         <BrowserRouter>
-          <App />
+          <App cookies={document.cookie} />
         </BrowserRouter>
       </ApolloProvider>
     </HelmetProvider>,

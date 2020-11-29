@@ -19,7 +19,6 @@ import {
   CityModule,
   UserModule,
   BlockModule,
-  SettingsModule,
 } from "@/server/components";
 import * as entities from "@/server/models";
 import type { ContextType } from "@/server/utils/common.dto";
@@ -87,14 +86,11 @@ import { APP_NAME } from "@/server/utils/constants";
         playground: process.env.NODE_ENV === "development",
         introspection: process.env.NODE_ENV === "development",
         cors: false,
+        uploads: true,
         context: ({ req, res }: ContextType) => ({ req, res }),
         transformSchema: (s: GraphQLSchema) => {
           setSchema(s);
           return s;
-        },
-        uploads: {
-          maxFileSize: 10000000, // 10 MB
-          maxFiles: 5,
         },
       }),
     }),
@@ -107,7 +103,6 @@ import { APP_NAME } from "@/server/utils/constants";
     StateModule,
     CityModule,
     BlockModule,
-    SettingsModule,
   ],
 })
 export class ApplicationModule {}

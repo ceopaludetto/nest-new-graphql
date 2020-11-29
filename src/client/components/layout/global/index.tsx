@@ -3,19 +3,19 @@ import { Helmet } from "react-helmet-async";
 
 import { withStyles } from "@material-ui/styles";
 
-import Roboto300 from "@/client/assets/fonts/roboto-300.woff2";
-import Roboto400 from "@/client/assets/fonts/roboto-400.woff2";
-import Roboto500 from "@/client/assets/fonts/roboto-500.woff2";
-import Roboto700 from "@/client/assets/fonts/roboto-700.woff2";
+import Poppins300 from "@/client/assets/fonts/poppins-300.woff2";
+import Poppins400 from "@/client/assets/fonts/poppins-400.woff2";
+import Poppins500 from "@/client/assets/fonts/poppins-500.woff2";
+import Poppins600 from "@/client/assets/fonts/poppins-600.woff2";
 
 function GlobalComponent() {
   return (
     <>
       <Helmet>
-        <link rel="preload" href={Roboto300} as="font" crossOrigin="anonymous" />
-        <link rel="preload" href={Roboto400} as="font" crossOrigin="anonymous" />
-        <link rel="preload" href={Roboto500} as="font" crossOrigin="anonymous" />
-        <link rel="preload" href={Roboto700} as="font" crossOrigin="anonymous" />
+        <link rel="preload" href={Poppins300} as="font" crossOrigin="anonymous" />
+        <link rel="preload" href={Poppins400} as="font" crossOrigin="anonymous" />
+        <link rel="preload" href={Poppins500} as="font" crossOrigin="anonymous" />
+        <link rel="preload" href={Poppins600} as="font" crossOrigin="anonymous" />
       </Helmet>
     </>
   );
@@ -26,31 +26,31 @@ export const Global = withStyles({
     "@font-face": [
       {
         fontDisplay: "swap",
-        fontFamily: "Roboto",
+        fontFamily: "Poppins",
         fontWeight: 300,
         fontStyle: "normal",
-        src: `local("Roboto Light"), local("Roboto-Light"), url(${Roboto300}) format("woff2")`,
+        src: `local("Poppins Light"), local("Poppins-Light"), url(${Poppins300}) format("woff2")`,
       },
       {
         fontDisplay: "swap",
-        fontFamily: "Roboto",
+        fontFamily: "Poppins",
         fontWeight: 400,
         fontStyle: "normal",
-        src: `local("Roboto Regular"), local("Roboto-Regular"), url(${Roboto400}) format("woff2")`,
+        src: `local("Poppins Regular"), local("Poppins-Regular"), url(${Poppins400}) format("woff2")`,
       },
       {
         fontDisplay: "swap",
-        fontFamily: "Roboto",
+        fontFamily: "Poppins",
         fontWeight: 500,
         fontStyle: "normal",
-        src: `local("Roboto Medium"), local("Roboto-Medium"), url(${Roboto500}) format("woff2")`,
+        src: `local("Poppins Medium"), local("Poppins-Medium"), url(${Poppins500}) format("woff2")`,
       },
       {
         fontDisplay: "swap",
-        fontFamily: "Roboto",
-        fontWeight: 700,
+        fontFamily: "Poppins",
+        fontWeight: 600,
         fontStyle: "normal",
-        src: `local("Roboto Bold"), local("Roboto-Bold"), url(${Roboto700}) format("woff2")`,
+        src: `local("Poppins Bold"), local("Poppins-Bold"), url(${Poppins600}) format("woff2")`,
       },
     ],
   },

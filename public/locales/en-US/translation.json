@@ -1,0 +1,16 @@
+{
+  "components": {
+    "footer": {
+      "rights": "All rights reserved"
+    }
+  },
+  "pages": {
+    "signin": {
+      "welcome-back": "Welcome back!"
+    }
+  },
+  "yup": {
+    "required": "Required field",
+    "email": "Field must be an email"
+  }
+}

@@ -46,15 +46,15 @@ export default function Auth({ routes }: RouteComponentProps) {
     <>
       <Container className={clsx(classes.container, isRegister ? classes.register : classes.notRegister)}>
         <Box width="100%" maxWidth={isRegister ? "900px" : "550px"}>
-          <Paper className={classes.paper} variant="outlined">
-            <Box p={4}>
+          <Box clone p={5.5}>
+            <Paper className={classes.paper} variant="outlined">
               <Switch>
                 {routes?.map(({ name, component: Component, children, ...rest }) => (
                   <Route key={name} render={(props) => <Component {...props} routes={children} />} {...rest} />
                 ))}
               </Switch>
-            </Box>
-          </Paper>
+            </Paper>
+          </Box>
         </Box>
       </Container>
       <Footer />

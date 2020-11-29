@@ -18,9 +18,9 @@ export function FormSelect({ name, label, helperText, id, defaultValue = "", chi
       name={name}
       defaultValue={defaultValue}
       render={({ value, onChange }) => (
-        <FormControl fullWidth variant="filled" error={!!error}>
+        <FormControl fullWidth error={!!error}>
           {label && (
-            <InputLabel id={`${id}-label`} variant="filled" error={!!error}>
+            <InputLabel id={`${id}-label`} error={!!error}>
               {label}
             </InputLabel>
           )}
@@ -28,7 +28,6 @@ export function FormSelect({ name, label, helperText, id, defaultValue = "", chi
             id={id}
             labelId={`${id}-label`}
             label={label}
-            variant="filled"
             error={!!error}
             value={value}
             onChange={onChange}
@@ -37,9 +36,7 @@ export function FormSelect({ name, label, helperText, id, defaultValue = "", chi
             {children}
           </Select>
           {(error?.message ?? helperText) && (
-            <FormHelperText variant="filled" error={!!error}>
-              {error?.message ?? helperText}
-            </FormHelperText>
+            <FormHelperText error={!!error}>{error?.message ?? helperText}</FormHelperText>
           )}
         </FormControl>
       )}

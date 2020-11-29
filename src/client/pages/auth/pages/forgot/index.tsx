@@ -4,16 +4,16 @@ import { useForm, FormProvider } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { useInterval } from "react-use";
 
-import { useMutation } from "@apollo/client";
-import { yupResolver } from "@hookform/resolvers";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Typography, Box, Grid } from "@material-ui/core";
 
 import { FormControl, PreloadLink } from "@/client/components";
 import { useAuthForgotMutation } from "@/client/graphql";
 import { ForgotSchema, ForgotValues } from "@/client/helpers/validations/forgot.schema";
-import { usePreload } from "@/client/hooks";
+import { usePreload, useErrorHandler } from "@/client/hooks";
 
 export default function Forgot() {
+  const { handleError } = useErrorHandler();
   const [forgot, { data }] = useAuthForgotMutation();
   const methods = useForm<ForgotValues>({ resolver: yupResolver(ForgotSchema) });
   const [submitted, setSubmitted] = React.useState(false);
@@ -35,8 +35,8 @@ export default function Forgot() {
     submitted ? 1000 : undefined
   );
 
-  const submit = methods.handleSubmit(async (values) => {
-    try {
+  const submit = methods.handleSubmit(
+    handleError<ForgotValues>(async (values) => {
       const callback = `${window.location.origin}/auth/recover`;
 
       await forgot({
@@ -46,26 +46,19 @@ export default function Forgot() {
       });
 
       setSubmitted(true);
-    } catch (error) {
-      const message = error?.message ?? "Usuário não encontrado";
-
-      methods.setError("login", {
-        type: "graphql",
-        message,
-      });
-    }
-  });
+    }, methods.setError)
+  );
 
   return (
     <FormProvider {...methods}>
-      <form autoComplete="on" onSubmit={submit}>
+      <form noValidate autoComplete="on" onSubmit={submit}>
         <Helmet>
           <title>Esqueceu a senha</title>
         </Helmet>
-        <Typography component="span" color="primary" variant="subtitle1">
+        <Typography component="span" color="primary" variant="h6">
           Esqueceu a senha
         </Typography>
-        <Typography component="h1" gutterBottom variant="h5">
+        <Typography component="h1" gutterBottom variant="h4">
           Recuperar Senha
         </Typography>
         <Box pt={2}>

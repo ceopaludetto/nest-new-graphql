@@ -10,7 +10,9 @@ import {
   Box,
   IconButton,
   Grow,
+  Theme,
 } from "@material-ui/core";
+import { makeStyles } from "@material-ui/styles";
 
 import { Tooltip } from "@/client/components/typography";
 
@@ -20,7 +22,15 @@ interface ModalProps extends DialogProps {
   actions?: React.ReactNode;
 }
 
+const useStyles = makeStyles((theme: Theme) => ({
+  dialogActions: {
+    padding: theme.spacing(2, 3, 3, 3),
+  },
+}));
+
 export function Modal({ onClose, open, title, id, children, actions, wrapper, ...rest }: ModalProps) {
+  const classes = useStyles();
+
   const markup = (
     <>
       <Box display="flex" alignItems="center">
@@ -38,7 +48,7 @@ export function Modal({ onClose, open, title, id, children, actions, wrapper, ..
       <DialogContent>
         <Box py={1}>{children}</Box>
       </DialogContent>
-      {actions && <DialogActions>{actions}</DialogActions>}
+      {actions && <DialogActions className={classes.dialogActions}>{actions}</DialogActions>}
     </>
   );
 

@@ -2,7 +2,7 @@ import * as React from "react";
 import { Route } from "react-router-dom";
 import { useIsomorphicLayoutEffect } from "react-use";
 
-import { Tabs, Tab, Box, Theme } from "@material-ui/core";
+import { Tabs, Tab, Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
 import { Page } from "@/client/components";
@@ -32,8 +32,10 @@ export default function Settings({ routes, location, history }: RouteComponentPr
   }, [location]);
 
   return (
-    <Page title="Configurações" subtitle="Ajustes">
-      <Box mb={3}>
+    <Page
+      title="Configurações"
+      subtitle="Ajustes"
+      footer={
         <Tabs className={classes.root} indicatorColor="primary" value={value} onChange={handleTabClick}>
           {routes?.map((r) => {
             const path = retrieveTo(r.path);
@@ -41,10 +43,13 @@ export default function Settings({ routes, location, history }: RouteComponentPr
             return <Tab value={generatePath(path)} label={r.meta?.displayName} key={r.name} />;
           })}
         </Tabs>
-      </Box>
-      {routes?.map(({ name, component: Component, children, ...rest }) => (
-        <Route key={name} render={(props) => <Component routes={children} {...props} />} {...rest} />
-      ))}
+      }
+    >
+      <>
+        {routes?.map(({ name, component: Component, children, ...rest }) => (
+          <Route key={name} render={(props) => <Component routes={children} {...props} />} {...rest} />
+        ))}
+      </>
     </Page>
   );
 }

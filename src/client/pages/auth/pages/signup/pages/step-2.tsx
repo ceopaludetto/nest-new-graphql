@@ -1,12 +1,12 @@
 import * as React from "react";
 import { useForm, FormProvider } from "react-hook-form";
 
-import { yupResolver } from "@hookform/resolvers";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Typography, Box, Grid } from "@material-ui/core";
 
-import { FormControl, PasswordHelper } from "@/client/components";
+import { FormControl, PasswordHelper, Spacer } from "@/client/components";
 import { SignUpStep2Schema, SignUpStep2Values } from "@/client/helpers/validations/signup.schema";
-import { StepperContext, useMultipleVisibility, usePasswordHelp } from "@/client/hooks";
+import { useStepperContext, useMultipleVisibility, usePasswordHelp } from "@/client/hooks";
 import { clean } from "@/client/utils/clean";
 
 import { WizardContext } from "../providers";
@@ -14,7 +14,7 @@ import { WizardContext } from "../providers";
 export default function Step2() {
   const [getVisibilityProps] = useMultipleVisibility(["password", "repeatPassword"]);
   const { setValues, values } = React.useContext(WizardContext);
-  const { next, prev } = React.useContext(StepperContext);
+  const { next, prev } = useStepperContext();
   const methods = useForm<SignUpStep2Values>({
     resolver: yupResolver(SignUpStep2Schema),
     defaultValues: values,
@@ -74,14 +74,14 @@ export default function Step2() {
             </Box>
           </Grid>
           <Grid item xs={12}>
-            <Box textAlign="right">
+            <Spacer textAlign="right">
               <Button variant="text" color="primary" onClick={prev}>
                 Voltar
-              </Button>{" "}
+              </Button>
               <Button variant="contained" color="primary" type="submit">
                 Próximo
               </Button>
-            </Box>
+            </Spacer>
           </Grid>
         </Grid>
       </form>

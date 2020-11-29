@@ -1,4 +1,0 @@
-fragment SettingsValues on Settings {
-  id
-  theme
-}

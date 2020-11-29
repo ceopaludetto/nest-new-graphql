@@ -1,5 +1,5 @@
 import * as React from "react";
-import { usePrevious } from "react-use";
+import { usePrevious, useCounter } from "react-use";
 
 interface StepperContextProps {
   currentPage: number;
@@ -11,42 +11,44 @@ interface StepperContextProps {
 
 type UseStepperReturn = [StepperContextProps["currentPage"], Omit<StepperContextProps, "currentPage">];
 
-export const StepperContext = React.createContext<StepperContextProps>(undefined as any);
+const StepperContext = React.createContext<StepperContextProps>(undefined as any);
 
 export function useStepper(pages: number, onStepChange?: (index: number) => any): UseStepperReturn {
-  const [currentPage, setCurrentPage] = React.useState(0);
+  const [currentPage, { set }] = useCounter(0, pages - 1, 0);
   const previousPage = usePrevious(currentPage);
 
   const changePage = React.useCallback(
     async (index: number) => {
-      setCurrentPage(index);
+      set(index);
       if (onStepChange) {
         await onStepChange(index);
       }
     },
-    [onStepChange, setCurrentPage]
+    [onStepChange, set]
   );
 
   const next = React.useCallback(() => {
-    if (currentPage + 1 <= pages) {
-      changePage(currentPage + 1);
-    }
-  }, [changePage, pages, currentPage]);
+    changePage(currentPage + 1);
+  }, [changePage, currentPage]);
 
   const prev = React.useCallback(() => {
-    if (currentPage - 1 >= 0) {
-      changePage(currentPage - 1);
-    }
+    changePage(currentPage - 1);
   }, [changePage, currentPage]);
 
   const toggle = React.useCallback(
     (page: number) => {
-      if (page <= pages && page >= 0) {
-        changePage(page);
-      }
+      changePage(page);
     },
-    [changePage, pages]
+    [changePage]
   );
 
   return [currentPage, { next, prev, toggle, previousPage }];
+}
+
+export function StepperProvider({ children, ...rest }: StepperContextProps & { children: React.ReactNode }) {
+  return <StepperContext.Provider value={rest}>{children}</StepperContext.Provider>;
+}
+
+export function useStepperContext() {
+  return React.useContext(StepperContext);
 }

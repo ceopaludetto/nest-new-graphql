@@ -1,7 +1,6 @@
 #import "./fragments/block-values.graphql"
 #import "./fragments/user-values.graphql"
 #import "./fragments/state-values.graphql"
-#import "./fragments/settings-values.graphql"
 
 query Logged {
   logged @client
@@ -70,11 +69,5 @@ mutation EvictRefreshCookie {
 query Me {
   profile {
     ...UserValues
-  }
-}
-
-mutation ToggleTheme {
-  toggleTheme {
-    ...SettingsValues
   }
 }

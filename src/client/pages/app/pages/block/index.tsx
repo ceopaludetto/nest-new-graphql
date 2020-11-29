@@ -2,12 +2,13 @@ import * as React from "react";
 import { useForm, FormProvider } from "react-hook-form";
 import { MdAdd } from "react-icons/md";
 
-import { yupResolver } from "@hookform/resolvers";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Grid, Card, CardActionArea, CardMedia, CardContent, Typography } from "@material-ui/core";
 
 import { Page, Modal, FormControl, FormUpload } from "@/client/components";
 import { useCreateBlockMutation, useShowBlocksQuery, ShowBlocksDocument, ShowBlocksQuery } from "@/client/graphql";
 import { BlockSchema, BlockValues } from "@/client/helpers/validations/block.schema";
+import { useErrorHandler } from "@/client/hooks";
 
 export default function Block() {
   const [newBlock, setNewBlock] = React.useState(false);
@@ -34,10 +35,11 @@ export default function Block() {
       }
     },
   });
+  const { handleError } = useErrorHandler();
   const { data } = useShowBlocksQuery();
 
-  const handleSubmit = methods.handleSubmit(async ({ name, number, image }) => {
-    try {
+  const handleSubmit = methods.handleSubmit(
+    handleError<BlockValues>(async ({ name, number, image }) => {
       const res = await createBlock({
         variables: {
           input: {
@@ -51,10 +53,8 @@ export default function Block() {
       if (res.data?.createBlock) {
         setNewBlock(false);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  });
+    }, methods.setError)
+  );
 
   return (
     <Page
@@ -65,7 +65,7 @@ export default function Block() {
           Novo Bloco
         </Button>
       }
-      helmet={{ title: "Blocos e Apartamentos" }}
+      helmetProps={{ title: "Blocos e Apartamentos" }}
       maxWidth="xl"
     >
       <Modal
@@ -83,7 +83,7 @@ export default function Block() {
             <Button color="primary" onClick={() => setNewBlock(false)}>
               Cancelar
             </Button>
-            <Button disabled={methods.formState.isSubmitting} color="primary" type="submit">
+            <Button variant="contained" disabled={methods.formState.isSubmitting} color="primary" type="submit">
               Adicionar
             </Button>
           </>
@@ -95,7 +95,7 @@ export default function Block() {
             <FormControl name="name" id="name" label="Nome" />
           </Grid>
           <Grid item xs={12}>
-            <FormControl name="number" type="number" required id="number" label="Número" />
+            <FormControl name="number" required id="number" label="Número" />
           </Grid>
           <Grid item xs={12}>
             <FormUpload multiple={false} id="image" accept="image/*" name="image" label="Imagem de Capa" />

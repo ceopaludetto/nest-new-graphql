@@ -1,13 +1,13 @@
 import * as React from "react";
 import { useForm, FormProvider } from "react-hook-form";
 
-import { yupResolver } from "@hookform/resolvers";
-import { MenuItem, Button, Box, Grid } from "@material-ui/core";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { MenuItem, Button, Grid } from "@material-ui/core";
 
-import { FormControl, MaskedFormControl, FormCalendar, FormSelect, PreloadLink } from "@/client/components";
+import { FormControl, MaskedFormControl, FormCalendar, FormSelect, PreloadLink, Spacer } from "@/client/components";
 import * as Masks from "@/client/helpers/masks";
 import { SignUpStep1Schema, SignUpStep1Values } from "@/client/helpers/validations/signup.schema";
-import { StepperContext } from "@/client/hooks";
+import { useStepperContext } from "@/client/hooks";
 import { clean } from "@/client/utils/clean";
 import { Gender } from "@/client/utils/common.dto";
 
@@ -15,7 +15,7 @@ import { WizardContext } from "../providers";
 
 export default function Step1() {
   const { setValues, values } = React.useContext(WizardContext);
-  const { next } = React.useContext(StepperContext);
+  const { next } = useStepperContext();
   const methods = useForm<SignUpStep1Values>({
     resolver: yupResolver(SignUpStep1Schema),
     defaultValues: values,
@@ -61,14 +61,14 @@ export default function Step1() {
             <MaskedFormControl rifm={Masks.tel} name="person.phone" id="phone" type="tel" label="Telefone" />
           </Grid>
           <Grid item xs={12}>
-            <Box textAlign="right">
+            <Spacer textAlign="right">
               <Button component={PreloadLink} variant="text" color="primary" to="/auth/signin">
-                Faça login em vez disso
-              </Button>{" "}
+                Já possui conta?
+              </Button>
               <Button variant="contained" color="primary" type="submit">
                 Próximo
               </Button>
-            </Box>
+            </Spacer>
           </Grid>
         </Grid>
       </form>

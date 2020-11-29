@@ -3,32 +3,6 @@ import type { RouteProps, RouteComponentProps as DefaultRouteComponentProps } fr
 import type { ApolloClient } from "@apollo/client";
 import type { LoadableComponent } from "@loadable/component";
 
-export type Colors = {
-  primary: string;
-  secondary: string;
-  background: string;
-  paper: string;
-  muted: string;
-  error: string;
-  success: string;
-  text: string;
-};
-
-export type Typography =
-  | "overline"
-  | "caption"
-  | "button"
-  | "body-1"
-  | "body-2"
-  | "subtitle-1"
-  | "subtitle-2"
-  | "headline-1"
-  | "headline-2"
-  | "headline-3"
-  | "headline-4"
-  | "headline-5"
-  | "headline-6";
-
 export type Client = ApolloClient<Record<string, any>>;
 
 export type Route = Omit<RouteProps, "component" | "render"> & {
@@ -47,14 +21,6 @@ export interface ReactStaticContext {
 export type RouteComponentProps = {
   routes?: Route[];
 } & DefaultRouteComponentProps<Record<string, any>, ReactStaticContext>;
-
-export type Breakpoints<T> = {
-  xs?: T;
-  sm?: T;
-  md?: T;
-  lg?: T;
-  xl?: T;
-};
 
 export type IsomorphicLib<T> = { default: T } | T;
 
@@ -101,3 +67,5 @@ export enum Gender {
   F = "F",
   N = "N",
 }
+
+export type ColorMode = "dark" | "light";

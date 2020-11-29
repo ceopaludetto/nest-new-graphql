@@ -2,9 +2,8 @@ import * as React from "react";
 import { Helmet } from "react-helmet-async";
 import { useForm, FormProvider } from "react-hook-form";
 
-import { yupResolver } from "@hookform/resolvers";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Button, Box, Typography, Link, Grid } from "@material-ui/core";
-import type { UserInputError } from "apollo-server-express";
 
 import { FormControl, PreloadLink } from "@/client/components";
 import {
@@ -15,17 +14,16 @@ import {
   SelectedCondominiumQuery,
 } from "@/client/graphql";
 import { SignInSchema, SignInValues } from "@/client/helpers/validations/signin.schema";
-import { useVisibility } from "@/client/hooks";
+import { useVisibility, useErrorHandler } from "@/client/hooks";
 
 export default function SignIn() {
-  const [genericError, setGenericError] = React.useState(false);
+  const { defaultError, handleError } = useErrorHandler();
   const [login, { client }] = useLoginMutation();
   const methods = useForm<SignInValues>({ resolver: yupResolver(SignInSchema) });
   const [getFieldProps] = useVisibility();
 
-  const submit = methods.handleSubmit(async (data) => {
-    setGenericError(false);
-    try {
+  const submit = methods.handleSubmit(
+    handleError<SignInValues>(async (data) => {
       const res = await login({
         variables: {
           input: data,
@@ -49,23 +47,8 @@ export default function SignIn() {
           logged: true,
         },
       });
-    } catch (error) {
-      if (error.graphQLErrors) {
-        const graphQLError = (error.graphQLErrors as UserInputError[])[0];
-        if (graphQLError.extensions.fields) {
-          const field: "login" | "password" = graphQLError.extensions.fields[0];
-          methods.setError(field, {
-            type: "graphql",
-            message: graphQLError.message,
-          });
-        } else {
-          setGenericError(true);
-        }
-      } else {
-        setGenericError(true);
-      }
-    }
-  });
+    }, methods.setError)
+  );
 
   return (
     <FormProvider {...methods}>
@@ -73,13 +56,13 @@ export default function SignIn() {
         <Helmet>
           <title>Login</title>
         </Helmet>
-        <Typography component="span" color="primary" variant="subtitle1">
+        <Typography component="span" color="primary" variant="h6">
           Login
         </Typography>
-        <Typography gutterBottom component="h1" variant="h5">
+        <Typography gutterBottom component="h1" variant="h4">
           Bem vindo de volta
         </Typography>
-        {genericError && (
+        {defaultError && (
           <Typography variant="body2" color="error">
             Falha ao realizar login
           </Typography>

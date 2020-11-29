@@ -3,7 +3,6 @@ import { Type } from "class-transformer";
 import { IsString, ValidateNested, IsOptional } from "class-validator";
 
 import { PersonInsertInput, PersonUpdateInput } from "@/server/components/person";
-import { SettingsInsertInput } from "@/server/components/settings";
 import { User } from "@/server/models";
 import { Sortable } from "@/server/utils/plugins";
 import * as Messages from "@/server/utils/validations/messages";
@@ -22,11 +21,6 @@ export class UserInsertInput {
   @Type(() => PersonInsertInput)
   @ValidateNested()
   public person!: PersonInsertInput;
-
-  @Field(() => SettingsInsertInput, { nullable: true })
-  @Type(() => SettingsInsertInput)
-  @ValidateNested()
-  public settings?: SettingsInsertInput;
 }
 
 @InputType()

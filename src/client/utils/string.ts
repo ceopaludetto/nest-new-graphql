@@ -11,6 +11,14 @@ export function splitPhone(val: string) {
   };
 }
 
+export function mergePhone(phone?: { ddd: string; number: string }) {
+  if (!phone) {
+    return "";
+  }
+
+  return `${phone.ddd} ${phone.number}`;
+}
+
 export function retrieveTo(val: string | string[] | undefined) {
   if (!val) {
     return "";
