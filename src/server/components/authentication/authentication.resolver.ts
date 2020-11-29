@@ -55,7 +55,10 @@ export class AuthenticationResolver {
   @Mutation(() => Boolean)
   public async evictRefreshCookie(@Context() ctx: ContextType) {
     ctx.res.cookie(REFRESH_TOKEN, "", {
-      expires: new Date(Date.now() - 1000),
+      sameSite: true,
+      path: "/",
+      httpOnly: true,
+      maxAge: 0,
     });
 
     return true;

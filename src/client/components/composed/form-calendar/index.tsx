@@ -6,15 +6,15 @@ import { KeyboardDatePicker, KeyboardDatePickerProps } from "@material-ui/picker
 
 type FormCalendarProps = Omit<KeyboardDatePickerProps, "name" | "value" | "onChange" | "onBlur"> & { name: string };
 
-export function FormCalendar({ name, helperText, ...rest }: FormCalendarProps) {
-  const { control, errors } = useFormContext();
+export function FormCalendar({ name, helperText, defaultValue = new Date(), ...rest }: FormCalendarProps) {
+  const { errors } = useFormContext();
   const error = get(errors, name);
 
   return (
     <Controller
       name={name}
-      control={control}
-      render={(props) => {
+      defaultValue={defaultValue}
+      render={({ ref, ...props }) => {
         return (
           <KeyboardDatePicker
             error={!!error}
@@ -24,6 +24,7 @@ export function FormCalendar({ name, helperText, ...rest }: FormCalendarProps) {
             KeyboardButtonProps={{ color: "primary" }}
             okLabel="Selecionar"
             cancelLabel="Cancelar"
+            inputRef={ref}
             {...props}
             {...rest}
           />

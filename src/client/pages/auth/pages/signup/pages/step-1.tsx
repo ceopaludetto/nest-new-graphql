@@ -4,7 +4,7 @@ import { useForm, FormProvider } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { MenuItem, Button, Grid } from "@material-ui/core";
 
-import { FormControl, MaskedFormControl, FormCalendar, FormSelect, PreloadLink, Spacer } from "@/client/components";
+import { FormControl, MaskedFormControl, FormCalendar, PreloadLink, Spacer, FormSelect } from "@/client/components";
 import * as Masks from "@/client/helpers/masks";
 import { SignUpStep1Schema, SignUpStep1Values } from "@/client/helpers/validations/signup.schema";
 import { useStepperContext } from "@/client/hooks";

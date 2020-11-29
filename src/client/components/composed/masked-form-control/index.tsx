@@ -10,13 +10,14 @@ interface MaskedFormControlProps extends Omit<TextFieldProps, "name" | "error"> 
 }
 
 export function MaskedFormControl({ name, helperText, rifm, defaultValue = "", ...rest }: MaskedFormControlProps) {
-  const { control, errors } = useFormContext();
+  const { errors } = useFormContext();
   const error = get(errors, name);
 
   return (
     <Controller
+      name={name}
       defaultValue={defaultValue}
-      render={({ onBlur, ...props }) => (
+      render={({ onBlur, ref, ...props }) => (
         <Rifm {...props} {...rifm}>
           {({ onChange, value }) => (
             <TextField
@@ -25,14 +26,13 @@ export function MaskedFormControl({ name, helperText, rifm, defaultValue = "", .
               onBlur={onBlur}
               name={name}
               error={!!error}
+              inputRef={ref}
               helperText={error?.message ?? helperText}
               {...rest}
             />
           )}
         </Rifm>
       )}
-      control={control}
-      name={name}
     />
   );
 }

@@ -162,6 +162,4 @@ export class AuthenticationService {
       throw new ApolloError("Falha ao solicitar recuperação de senha");
     }
   }
-
-  // implement recover
 }

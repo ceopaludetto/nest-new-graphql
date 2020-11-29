@@ -10,14 +10,13 @@ interface FormRadioCardProps extends Omit<RadioGroupProps, "name" | "value" | "e
 }
 
 export function FormRadioGroup({ name, label, defaultValue = "", helperText, children, ...rest }: FormRadioCardProps) {
-  const { errors, control } = useFormContext();
+  const { errors } = useFormContext();
   const error = get(errors, name);
 
   return (
     <FormControl fullWidth error={!error}>
       {label && <FormLabel>{label}</FormLabel>}
       <Controller
-        control={control}
         name={name}
         defaultValue={defaultValue}
         as={

@@ -16,7 +16,7 @@ const client = createClient(
   createUploadLink({
     credentials: "same-origin",
     uri: "/graphql",
-  })
+  }) as any
 );
 
 // eslint-disable-next-line promise/catch-or-return

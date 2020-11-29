@@ -27,7 +27,7 @@ export function FormToggle({ name, label, id, info, helperText, variant = "check
   const Component = variant === "checkbox" ? Checkbox : Switch;
 
   return (
-    <FormControl error={!!error} component="fieldset" fullWidth variant="filled">
+    <FormControl error={!!error} component="fieldset" fullWidth>
       <Box mb={0.5}>
         <FormLabel error={!!error} component="legend" id={`${id}-label`}>
           {label}
@@ -39,9 +39,7 @@ export function FormToggle({ name, label, id, info, helperText, variant = "check
         control={<Component name={name} inputRef={register} color="primary" id={id} {...rest} />}
       />
       {(error?.message ?? helperText) && (
-        <FormHelperText variant="filled" error={!!error}>
-          {error?.message ?? helperText}
-        </FormHelperText>
+        <FormHelperText error={!!error}>{error?.message ?? helperText}</FormHelperText>
       )}
     </FormControl>
   );
