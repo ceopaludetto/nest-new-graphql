@@ -1,8 +1,7 @@
 import { Entity, Property, ManyToOne } from "@mikro-orm/core";
 import { ObjectType, Field } from "@nestjs/graphql";
 
-import { PHONE } from "@/server/utils/constants";
-
+import { PHONE } from "../utils/constants";
 import { BaseModel } from "./base.model";
 import { Person } from "./person.model";
 

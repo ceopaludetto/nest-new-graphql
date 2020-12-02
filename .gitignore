@@ -1,8 +1,8 @@
 node_modules
 build
 
-env/config.*.yml
-!env/config.example.yml
+.env*
+!.env.example
 
 .vscode
 tmp
@@ -14,3 +14,4 @@ src/server/schema.graphql
 src/client/graphql/operations.ts
 
 coverage
+uploads

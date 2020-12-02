@@ -3,25 +3,23 @@
     "target": "ESNext",
     "module": "ESNext",
     "lib": ["ESNext", "DOM"],
-    "baseUrl": "src",
     "jsx": "preserve",
-    "paths": {
-      "@/*": ["*"]
-    },
     "moduleResolution": "Node",
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "strict": true,
-    "strictNullChecks": true,
     "noEmit": true,
-    "noEmitHelpers": true,
     "sourceMap": true,
-    "allowJs": false,
     "skipLibCheck": true,
-    "importsNotUsedAsValues": "error"
+    "forceConsistentCasingInFileNames": true,
+    "importsNotUsedAsValues": "error",
+    "isolatedModules": true,
+    "baseUrl": "src",
+    "paths": {
+      "@/*": ["*"]
+    }
   },
-  "include": ["src/**/*", "configuration/**/*", "scripts/**/*", "**/*.js"],
-  "exclude": ["node_modules", "dist", "build", "coverage", "certs", "env"]
+  "include": ["src/**/*", "**/*.js", "**/*.ts"],
+  "exclude": ["node_modules", "dist", "build", "coverage", "uploads"]
 }

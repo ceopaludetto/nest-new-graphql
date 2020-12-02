@@ -1,5 +1,4 @@
 export * from "./authentication";
-export * from "./configuration";
 export * from "./condominium";
 export * from "./person";
 export * from "./state";
@@ -8,3 +7,5 @@ export * from "./queue";
 export * from "./city";
 export * from "./user";
 export * from "./block";
+export * from "./schema";
+export * from "./upload";

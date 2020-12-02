@@ -1,8 +1,7 @@
 import { Entity, Property, ManyToOne, OneToMany, Collection } from "@mikro-orm/core";
 import { ObjectType, Field } from "@nestjs/graphql";
 
-import { BLOCK } from "@/server/utils/constants";
-
+import { BLOCK } from "../utils/constants";
 import { BaseModel } from "./base.model";
 import { Condominium } from "./condominium.model";
 import { Local } from "./local.model";

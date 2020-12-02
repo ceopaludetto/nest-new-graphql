@@ -1,8 +1,7 @@
 import { BullModule } from "@nestjs/bull";
 import { Module, Global, OnModuleInit } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
-
-import { ConfigurationService } from "@/server/components";
 
 import { MailQueueConsumer } from "./mail.queue.consumer";
 
@@ -11,12 +10,12 @@ import { MailQueueConsumer } from "./mail.queue.consumer";
   imports: [
     BullModule.registerQueueAsync({
       name: "mail",
-      inject: [ConfigurationService],
-      useFactory: ({ queue }: ConfigurationService) => ({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
         redis: {
-          host: queue.host,
-          port: +queue.port,
-          password: queue.password,
+          host: configService.get<string>("QUEUE_HOST"),
+          port: configService.get<number>("QUEUE_PORT"),
+          password: configService.get<string>("QUEUE_PASSWORD"),
         },
       }),
     }),

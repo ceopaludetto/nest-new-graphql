@@ -1,9 +1,8 @@
 import { Entity, Property, Enum, OneToOne, OneToMany, Collection, ManyToMany } from "@mikro-orm/core";
 import { ObjectType, Field, registerEnumType } from "@nestjs/graphql";
 
-import { PERSON } from "@/server/utils/constants";
-import { Gender } from "@/server/utils/enums";
-
+import { PERSON } from "../utils/constants";
+import { Gender } from "../utils/enums";
 import { BaseModel } from "./base.model";
 import { Condominium } from "./condominium.model";
 import { Phone } from "./phone.model";

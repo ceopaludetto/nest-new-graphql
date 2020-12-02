@@ -1,8 +1,7 @@
 import { Entity, Property, ManyToOne } from "@mikro-orm/core";
 import { ObjectType, Field } from "@nestjs/graphql";
 
-import { CITY } from "@/server/utils/constants";
-
+import { CITY } from "../utils/constants";
 import { BaseModel } from "./base.model";
 import { State } from "./state.model";
 

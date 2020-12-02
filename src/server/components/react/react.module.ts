@@ -2,13 +2,14 @@ import { Module, OnModuleInit } from "@nestjs/common";
 import { InjectPinoLogger, PinoLogger } from "nestjs-pino";
 
 import { AuthenticationModule } from "@/server/components/authentication";
+import { SchemaModule } from "@/server/components/schema";
 
 import { ReactController } from "./react.controller";
 import { ReactRenderService } from "./react.render.service";
 import { ReactService } from "./react.service";
 
 @Module({
-  imports: [AuthenticationModule],
+  imports: [AuthenticationModule, SchemaModule],
   controllers: [ReactController],
   providers: [ReactService, ReactRenderService],
 })

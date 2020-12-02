@@ -1,24 +1,23 @@
-import { Module, Global } from "@nestjs/common";
+import { Module, OnModuleInit } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
 import { PinoLogger, InjectPinoLogger } from "nestjs-pino";
 
-import { ConfigurationService } from "@/server/components/configuration";
 import { UserModule } from "@/server/components/user";
 
 import { AuthenticationResolver } from "./authentication.resolver";
 import { AuthenticationService } from "./authentication.service";
 import { JwtStrategy } from "./strategies/jwt.strategy";
 
-@Global()
 @Module({
   imports: [
     UserModule,
     PassportModule.register({ defaultStrategy: "jwt" }),
     JwtModule.registerAsync({
-      inject: [ConfigurationService],
-      useFactory: async ({ auth }: ConfigurationService) => ({
-        secret: auth.secret,
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.get("AUTH_SECRET"),
         signOptions: { expiresIn: "1h" },
       }),
     }),
@@ -26,7 +25,7 @@ import { JwtStrategy } from "./strategies/jwt.strategy";
   providers: [AuthenticationService, AuthenticationResolver, JwtStrategy],
   exports: [AuthenticationService, PassportModule],
 })
-export class AuthenticationModule {
+export class AuthenticationModule implements OnModuleInit {
   public constructor(@InjectPinoLogger(AuthenticationModule.name) private readonly logger: PinoLogger) {}
 
   public onModuleInit() {

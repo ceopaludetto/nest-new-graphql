@@ -3,14 +3,13 @@ import { MikroOrmModule } from "@mikro-orm/nestjs";
 import { MailerModule } from "@nestjs-modules/mailer";
 import { PugAdapter } from "@nestjs-modules/mailer/dist/adapters/pug.adapter";
 import { Module } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { GraphQLModule } from "@nestjs/graphql";
 import type { GraphQLSchema } from "graphql";
 import { LoggerModule, PinoLogger } from "nestjs-pino";
 
 import {
-  ConfigurationService,
   AuthenticationModule,
-  ConfigurationModule,
   CondominiumModule,
   PersonModule,
   ReactModule,
@@ -19,11 +18,14 @@ import {
   CityModule,
   UserModule,
   BlockModule,
+  SchemaModule,
+  SchemaService,
+  UploadModule,
 } from "@/server/components";
 import * as entities from "@/server/models";
 import type { ContextType } from "@/server/utils/common.dto";
 import { APP_NAME } from "@/server/utils/constants";
-
+import { validate } from "@/server/utils/validations/configuration";
 @Module({
   imports: [
     LoggerModule.forRoot({
@@ -42,18 +44,22 @@ import { APP_NAME } from "@/server/utils/constants";
             : false,
       },
     }),
-    ConfigurationModule,
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: `.env.${process.env.NODE_ENV ?? "development"}`,
+      validate,
+    }),
     MikroOrmModule.forRootAsync({
-      inject: [ConfigurationService, PinoLogger],
-      useFactory: ({ database }: ConfigurationService, logger: PinoLogger) => ({
-        type: database.type,
-        dbName: database.database,
-        host: database.host,
-        port: database.port,
-        user: database.username,
-        password: database.password,
+      inject: [ConfigService, PinoLogger],
+      useFactory: (configService: ConfigService, logger: PinoLogger) => ({
+        type: configService.get("DATABASE_TYPE"),
+        dbName: configService.get("DATABASE_DB"),
+        host: configService.get("DATABASE_HOST"),
+        port: configService.get("DATABASE_PORT"),
+        user: configService.get("DATABASE_USERNAME"),
+        password: configService.get("DATABASE_PASSWORD"),
         namingStrategy: EntityCaseNamingStrategy,
-        debug: database.logger && ["query"],
+        debug: configService.get("DATABASE_LOGGER") && ["query"],
         entities: Object.values(entities).filter((x) => typeof x === "function") as any,
         discovery: { disableDynamicFileAccess: true }, // due to webpack usage
         tsNode: false,
@@ -61,15 +67,18 @@ import { APP_NAME } from "@/server/utils/constants";
       }),
     }),
     MailerModule.forRootAsync({
-      inject: [ConfigurationService],
-      useFactory: async ({ mailer }: ConfigurationService) => ({
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
         transport: {
-          host: mailer.host,
-          port: mailer.port,
-          auth: mailer.auth,
+          host: configService.get<string>("MAILER_HOST"),
+          port: configService.get<number>("MAILER_PORT"),
+          auth: {
+            user: configService.get<string>("MAILER_AUTH_USER"),
+            pass: configService.get<string>("MAILER_AUTH_PASS"),
+          },
         },
         template: {
-          dir: mailer.template.dir,
+          dir: configService.get("MAILER_TEMPLATES"),
           adapter: new PugAdapter(),
           options: {
             strict: true,
@@ -78,9 +87,10 @@ import { APP_NAME } from "@/server/utils/constants";
       }),
     }),
     GraphQLModule.forRootAsync({
-      inject: [ConfigurationService],
-      useFactory: async ({ graphql, setSchema }: ConfigurationService) => ({
-        autoSchemaFile: graphql.schema ?? true,
+      imports: [SchemaModule],
+      inject: [ConfigService, SchemaService],
+      useFactory: async (configService: ConfigService, schemaService: SchemaService) => ({
+        autoSchemaFile: configService.get<string>("GRAPHQL_SCHEMA") ?? true,
         installSubscriptionHandlers: true,
         debug: process.env.NODE_ENV === "development",
         playground: process.env.NODE_ENV === "development",
@@ -89,7 +99,7 @@ import { APP_NAME } from "@/server/utils/constants";
         uploads: true,
         context: ({ req, res }: ContextType) => ({ req, res }),
         transformSchema: (s: GraphQLSchema) => {
-          setSchema(s);
+          schemaService.setSchema(s);
           return s;
         },
       }),
@@ -103,6 +113,8 @@ import { APP_NAME } from "@/server/utils/constants";
     StateModule,
     CityModule,
     BlockModule,
+    SchemaModule,
+    UploadModule,
   ],
 })
 export class ApplicationModule {}

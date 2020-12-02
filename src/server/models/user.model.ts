@@ -2,8 +2,7 @@ import { Entity, Property, OneToOne } from "@mikro-orm/core";
 import { ObjectType, Field } from "@nestjs/graphql";
 import { compare } from "bcryptjs";
 
-import { USER } from "@/server/utils/constants";
-
+import { USER } from "../utils/constants";
 import { BaseModel } from "./base.model";
 import { Person } from "./person.model";
 

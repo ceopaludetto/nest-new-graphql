@@ -52,6 +52,6 @@ export const Global = withStyles({
         fontStyle: "normal",
         src: `local("Poppins Bold"), local("Poppins-Bold"), url(${Poppins600}) format("woff2")`,
       },
-    ],
+    ] as any,
   },
 })(GlobalComponent);

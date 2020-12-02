@@ -6,6 +6,7 @@ import { Logger } from "nestjs-pino";
 import { installMiddlewares } from "@/server/utils/middlewares";
 
 import { ApplicationModule } from "./app.module";
+import "./utils/patch"; // FIXME: https://github.com/typestack/class-transformer/pull/262
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(ApplicationModule, { logger: false });

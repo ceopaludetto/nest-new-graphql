@@ -8,7 +8,7 @@ import { PinoLogger, InjectPinoLogger } from "nestjs-pino";
 import { LoggedDocument, LoggedQuery, SelectedCondominiumDocument, SelectedCondominiumQuery } from "@/client/graphql";
 import { createClient } from "@/client/providers/apollo";
 import { AuthenticationService } from "@/server/components/authentication";
-import { ConfigurationService } from "@/server/components/configuration";
+import { SchemaService } from "@/server/components/schema";
 import { REFRESH_TOKEN } from "@/server/utils/constants";
 
 import { ReactRenderService } from "./react.render.service";
@@ -16,7 +16,7 @@ import { ReactRenderService } from "./react.render.service";
 @Injectable()
 export class ReactService {
   public constructor(
-    private readonly configService: ConfigurationService,
+    private readonly schemaService: SchemaService,
     private readonly authenticationService: AuthenticationService,
     private readonly renderService: ReactRenderService,
     @InjectPinoLogger(ReactService.name) private readonly logger: PinoLogger
@@ -44,7 +44,7 @@ export class ReactService {
       const client = createClient(
         true,
         new SchemaLink({
-          schema: this.configService.schema,
+          schema: this.schemaService.schema,
           context: (operation) => {
             const ctx = operation.getContext();
 
