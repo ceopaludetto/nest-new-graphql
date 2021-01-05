@@ -13,7 +13,7 @@ export class Migration20201202033432 extends Migration {
           defaults(k, t);
           t.string("name").notNullable();
           t.integer("number").notNullable();
-          t.string("condominium").references("id").inTable(CONDOMINIUM);
+          t.string("condominium").references("id").inTable(CONDOMINIUM).notNullable();
         })
         .toQuery()
     );

@@ -2,6 +2,8 @@ import { Injectable } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { createWriteStream, ensureDir } from "fs-extra";
 import path from "path";
+import sharp from "sharp";
+import shortid from "shortid";
 
 import type { FileUpload } from "@/server/utils/common.dto";
 
@@ -9,15 +11,17 @@ import type { FileUpload } from "@/server/utils/common.dto";
 export class UploadService {
   public constructor(private readonly configService: ConfigService) {}
 
-  public async upload({ createReadStream, filename }: FileUpload) {
+  public async upload({ createReadStream }: FileUpload) {
     const dir = this.configService.get<string>("UPLOADS_PATH", "uploads");
-    const filePath = path.resolve(dir, filename);
+    const file = `${shortid.generate()}.webp`;
+    const filePath = path.resolve(dir, file);
 
-    return new Promise((resolve, reject) => {
+    return new Promise<string>((resolve, reject) => {
       createReadStream()
+        .pipe(sharp().webp())
         .pipe(createWriteStream(filePath))
         .on("finish", () => {
-          resolve(path);
+          resolve(file);
         })
         .on("error", reject);
     });

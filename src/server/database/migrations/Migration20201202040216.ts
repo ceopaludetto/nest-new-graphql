@@ -14,8 +14,8 @@ export class Migration20201202040216 extends Migration {
           t.string("zip", 8).notNullable();
           t.string("address").notNullable();
           t.string("number").notNullable();
-          t.string("city").references("id").inTable(CITY);
-          t.string("condominium").references("id").inTable(CONDOMINIUM);
+          t.string("city").references("id").inTable(CITY).notNullable();
+          t.string("condominium").references("id").inTable(CONDOMINIUM).notNullable();
         })
         .toQuery()
     );

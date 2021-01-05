@@ -4,6 +4,7 @@ import compression from "compression";
 import cookie from "cookie-parser";
 import { static as serve } from "express";
 import helmet from "helmet";
+import path from "path";
 
 import { formatErrors } from "./validations/format";
 
@@ -29,6 +30,13 @@ export async function installMiddlewares(app: INestApplication) {
 
     app.use(
       serve(process.env.RAZZLE_PUBLIC_DIR as string, {
+        maxAge: process.env.NODE_ENV === "production" ? "1y" : undefined,
+      })
+    );
+
+    app.use(
+      "/image",
+      serve(path.resolve("uploads"), {
         maxAge: process.env.NODE_ENV === "production" ? "1y" : undefined,
       })
     );

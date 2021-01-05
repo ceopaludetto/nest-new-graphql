@@ -15,8 +15,8 @@ export class Migration20201202033559 extends Migration {
           t.string("description").nullable();
           t.integer("capacity").notNullable();
           t.string("image").nullable();
-          t.string("block").references("id").inTable(BLOCK);
-          t.string("condominium").references("id").inTable(CONDOMINIUM);
+          t.string("block").references("id").inTable(BLOCK).notNullable();
+          t.string("condominium").references("id").inTable(CONDOMINIUM).notNullable();
         })
         .toQuery()
     );

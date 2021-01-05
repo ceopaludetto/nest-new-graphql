@@ -59,7 +59,7 @@ import { validate } from "@/server/utils/validations/configuration";
         user: configService.get("DATABASE_USERNAME"),
         password: configService.get("DATABASE_PASSWORD"),
         namingStrategy: EntityCaseNamingStrategy,
-        debug: configService.get("DATABASE_LOGGER") && ["query"],
+        debug: configService.get("DATABASE_LOGGER") && ["query", "query-params"],
         entities: Object.values(entities).filter((x) => typeof x === "function") as any,
         discovery: { disableDynamicFileAccess: true }, // due to webpack usage
         tsNode: false,
