@@ -10,6 +10,7 @@
     "experimentalDecorators": true,
     "strict": true,
     "noEmit": true,
+    "noEmitHelpers": true,
     "sourceMap": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
@@ -20,6 +21,6 @@
       "@/*": ["*"]
     }
   },
-  "include": ["src/**/*", "**/*.js", "**/*.ts"],
-  "exclude": ["node_modules", "dist", "build", "coverage", "uploads"]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "build", "coverage", "uploads", "cache"]
 }

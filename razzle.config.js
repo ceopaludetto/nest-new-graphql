@@ -3,14 +3,19 @@ const LoadablePlugin = require("@loadable/webpack-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 const LodashPlugin = require("lodash-webpack-plugin");
 const path = require("path");
+const SpeedMeasureWebpackPlugin = require("speed-measure-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 
 process.env.RAZZLE_LOADABLE_MANIFEST = path.resolve("build", "loadable-stats.json");
 
+const measure = process.argv.some((arg) => arg === "--measure");
+
+const smp = new SpeedMeasureWebpackPlugin({ disable: !measure });
+
 module.exports = {
   experimental: {
     reactRefresh: true,
-    // newBabel: true,
+    newBabel: true,
     newExternals: true,
     newSplitChunks: true,
     newContentHash: true,
@@ -27,7 +32,18 @@ module.exports = {
       },
     },
   ],
-  modifyWebpackConfig: ({ webpackConfig: config, env: { target, dev } }) => {
+  modifyPaths({ paths }) {
+    paths.appClientIndexJs = path.resolve("src", "client", "index.tsx");
+    paths.appServerIndexJs = path.resolve("src", "server", "index.ts");
+
+    return paths;
+  },
+  modifyWebpackOptions({ options: { webpackOptions } }) {
+    webpackOptions.fileLoaderExclude.push(/\.graphql$/);
+
+    return webpackOptions;
+  },
+  modifyWebpackConfig({ webpackConfig: config, env: { target, dev } }) {
     if (target === "node" && !dev) {
       config.optimization = {
         minimize: true,
@@ -56,20 +72,8 @@ module.exports = {
       };
     }
 
-    if (target === "web") {
-      config.entry.client = path.resolve("src", "client", "index.tsx");
-    }
-
-    if (target === "node") {
-      // add correct index path
-      config.entry.server = path.resolve("src", "server", "index.ts");
-    }
-
     config.resolve.alias["@"] = path.resolve("src");
     config.resolve.alias["lodash-es"] = "lodash";
-
-    // exclude .graphql from file-loader
-    config.module.rules.find((x) => x.exclude).exclude.push(/\.graphql$/);
 
     // add lodash plugin
     config.plugins.unshift(new LodashPlugin());
@@ -102,6 +106,6 @@ module.exports = {
       use: [...ts.use, require.resolve("graphql-let/loader")],
     });
 
-    return config;
+    return smp.wrap(config);
   },
 };
