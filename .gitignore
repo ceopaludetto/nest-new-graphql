@@ -15,3 +15,5 @@ src/client/graphql/operations.ts
 
 coverage
 uploads
+
+cache
