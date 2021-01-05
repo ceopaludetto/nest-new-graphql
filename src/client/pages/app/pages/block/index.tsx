@@ -107,7 +107,9 @@ export default function Block() {
           <Grid item xs={12} md={6} lg={3} key={block.id}>
             <Card variant="outlined">
               <CardActionArea>
-                {block.image && <CardMedia title="Luru" style={{ height: 200 }} />}
+                {block.image && (
+                  <CardMedia image={`/image/${block.image}`} title={block.name} style={{ height: 200 }} />
+                )}
                 <CardContent>
                   <Typography color="primary" variant="button">
                     Bloco

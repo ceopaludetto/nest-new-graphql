@@ -18,8 +18,9 @@ import {
 } from "@material-ui/core";
 import { makeStyles } from "@material-ui/styles";
 
+import { Logo } from "@/client/assets/logo";
 import { Blurred } from "@/client/components/layout";
-import { PreloadNavLink, Tooltip } from "@/client/components/typography";
+import { PreloadNavLink, Tooltip, PreloadLink } from "@/client/components/typography";
 import { useMeQuery, SelectedCondominiumQuery, SelectedCondominiumDocument } from "@/client/graphql";
 import { usePathWithCondominium } from "@/client/hooks";
 import type { RouteComponentProps } from "@/client/utils/common.dto";
@@ -94,6 +95,7 @@ export function Sidebar({
       const path = generatePath("/app/:condominium", {
         condominium: id,
       });
+
       history.replace(path);
     },
     [client, generatePath, history]
@@ -113,6 +115,11 @@ export function Sidebar({
     <Paper className={classes.container} square variant="outlined">
       <Blurred className={classes.sidebar}>
         <Box flex="1">
+          <Box width="100%" display="flex" py={3} justifyContent="center">
+            <PreloadLink to="/app/:condominium">
+              <Logo isLogoType height={40} />
+            </PreloadLink>
+          </Box>
           <List component="nav">
             {routes?.map((r) => {
               const Icon = r.meta?.icon;

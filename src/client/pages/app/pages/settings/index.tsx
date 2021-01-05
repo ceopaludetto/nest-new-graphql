@@ -35,7 +35,7 @@ export default function Settings({ routes, location, history }: RouteComponentPr
     <Page
       title="Configurações"
       subtitle="Ajustes"
-      footer={
+      tabs={
         <Tabs className={classes.root} indicatorColor="primary" value={value} onChange={handleTabClick}>
           {routes?.map((r) => {
             const path = retrieveTo(r.path);

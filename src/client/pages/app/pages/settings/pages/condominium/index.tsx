@@ -35,7 +35,11 @@ export default function Condominium() {
         </Grid>
         <Grid item xs={12}>
           <Box textAlign="right">
-            <Button variant="contained" color="primary">
+            <Button
+              disabled={methods.formState.isSubmitting || !methods.formState.isDirty}
+              variant="contained"
+              color="primary"
+            >
               Alterar Informações
             </Button>
           </Box>

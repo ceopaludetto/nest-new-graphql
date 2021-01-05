@@ -26,9 +26,7 @@ export function useErrorHandler() {
     []
   );
 
-  const emptyDefaultError = React.useCallback(() => {
-    return setDefaultError("");
-  }, [setDefaultError]);
+  const emptyDefaultError = React.useCallback(() => setDefaultError(""), [setDefaultError]);
 
   return { defaultError, handleError, emptyDefaultError };
 }

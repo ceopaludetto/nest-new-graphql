@@ -10,14 +10,15 @@ interface PageProps extends React.ComponentProps<typeof Container> {
   helmetProps?: HelmetProps;
   helmet?: React.ReactNode;
   footer?: React.ReactNode;
+  tabs?: React.ReactNode;
 }
 
-export function Page({ title, subtitle, children, actions, helmet, helmetProps, footer, ...rest }: PageProps) {
+export function Page({ title, subtitle, children, actions, helmet, helmetProps, footer, tabs, ...rest }: PageProps) {
   return (
     <>
       {helmet || (helmetProps && <Helmet {...helmetProps}>{helmet}</Helmet>)}
       <Container {...rest}>
-        <Box display="flex" mb={4} mt={3} alignItems="center" flexWrap="wrap">
+        <Box display="flex" mb={tabs ? 2 : 4} mt={3} alignItems="center" flexWrap="wrap">
           <Box flex={{ xs: "1" }}>
             <Typography variant="subtitle1" component="span" color="primary">
               {subtitle}
@@ -33,6 +34,11 @@ export function Page({ title, subtitle, children, actions, helmet, helmetProps, 
             </Box>
           )}
         </Box>
+        {!!tabs && (
+          <Box position="sticky" bgcolor="background.default" zIndex={3000} mt={2} mb={4} mx={-3} px={3} top={0}>
+            {tabs}
+          </Box>
+        )}
         {children}
       </Container>
     </>

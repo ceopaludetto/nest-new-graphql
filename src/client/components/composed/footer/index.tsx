@@ -32,10 +32,10 @@ export function Footer() {
 
   return (
     <footer>
-      <Box clone borderLeft="0" borderRight="0" borderBottom="0">
-        <Paper variant="outlined" square>
+      <Box clone borderColor="divider" borderTop="1px solid">
+        <Paper variant="elevation" elevation={0} square>
           <Box py={4}>
-            <Container>
+            <Container maxWidth="md">
               <Grid container>
                 <Grid item xs={12} md>
                   <Box mb={2}>
@@ -96,7 +96,9 @@ export function Footer() {
                   <PreloadLink to="/">
                     <Logo isLogoType height={40} />
                   </PreloadLink>
-                  <Typography variant="body2">Copyright © 2020 Domus Inc. Todos direitos reservados.</Typography>
+                  <Box mt={2}>
+                    <Typography variant="body2">Copyright © 2020 Domus Inc. Todos direitos reservados.</Typography>
+                  </Box>
                 </Box>
                 <Box>
                   <Spacer display="flex" alignItems="center">
@@ -110,19 +112,22 @@ export function Footer() {
                         <AiOutlineTwitter />
                       </IconButton>
                     </Tooltip>
-                    <Select
-                      margin="dense"
-                      value={colorMode}
-                      startAdornment={
-                        <InputAdornment position="start">
-                          {colorMode === "dark" ? <FiMoon /> : <FiSun />}
-                        </InputAdornment>
-                      }
-                      onChange={(e) => changeColorMode(e.target.value as "dark" | "light")}
-                    >
-                      <MenuItem value="dark">Escuro</MenuItem>
-                      <MenuItem value="light">Claro</MenuItem>
-                    </Select>
+                    <Box minWidth={150}>
+                      <Select
+                        margin="dense"
+                        value={colorMode}
+                        startAdornment={
+                          <InputAdornment position="start">
+                            {colorMode === "dark" ? <FiMoon /> : <FiSun />}
+                          </InputAdornment>
+                        }
+                        fullWidth
+                        onChange={(e) => changeColorMode(e.target.value as "dark" | "light")}
+                      >
+                        <MenuItem value="dark">Escuro</MenuItem>
+                        <MenuItem value="light">Claro</MenuItem>
+                      </Select>
+                    </Box>
                   </Spacer>
                 </Box>
               </Box>
