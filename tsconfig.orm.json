@@ -2,6 +2,8 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "module": "CommonJS",
-    "target": "ES6"
-  }
+    "target": "ES6",
+    "noEmitHelpers": false
+  },
+  "include": ["mikro-orm.config.ts"]
 }
